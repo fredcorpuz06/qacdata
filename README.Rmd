@@ -1,0 +1,51 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# qacdata
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Overview
+
+`qacdata` is an R data package for datasets used by students of [Passion Driven Statistics](https://passiondrivenstatistics.com/). This package allows for the concise searching and downloading of relevant data from the following sources:
+
+* [Federal Reserve Economic Data (FRED)](https://fred.stlouisfed.org/): economic time-series data
+* [World Development Indicators (WDI)](https://datacatalog.worldbank.org/dataset/world-development-indicators): collection of development indicators, compiled from officially-recognized international sources
+* [addhealth](https://www.cpc.unc.edu/projects/addhealth/documentation/publicdata): developmental and health trajectories across the life course of adolescence into young adulthood (Wave 4)
+* marscrater: global database for Mars that contains 378,540 craters statistically complete for diameters D ≥ 1 km
+* [cttraffic](https://data.ct.gov/Public-Safety/Racial-Profiling-Prohibition-Project-Traffic-Stop-/g7s9-f7az): racial profiling prohibition project traffic stop data
+
+
+## Installation
+
+You can install the development version from [GitHub](https://github.com/fredcorpuz06/qacdata) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("fredcorpuz06/qacdata")
+```
+## Usage
+
+```{r example}
+library(qacdata)
+
+data_search("education", c("FRED", "WDI"))
+
+data_download("AddHealth", "H4TR10", "H4CJ5")
+```
+
+## Getting help
+
+If you encounter a clear bug, please file a minimal reproducible example on [github](https://github.com/fredcorpuz06/qacdata/issues). 

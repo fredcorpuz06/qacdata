@@ -8,7 +8,7 @@ FRED_KEYS <- c(
 
 # dataset, col_id, description, notes
 
-#' @import dplyr
+#' @importFrom purrr map_df
 #' @export
 data_search <- function(.search_str, .datasets = DATASETS, .view_meta = FALSE){
   map_df(.datasets, ~ single_data_search_(.search_str, .dataset = .x))

@@ -97,8 +97,11 @@ data_download_MarsCrater_ <- function(...){
 # data_download_MarsCrater_("DIAM_CIRCLE_IMAGE")
 
 data_download_CtTraffic_ <- function(...){
-
+  qacdata::ct_trafficstops %>% 
+    select(...)
 }
+
+# data_download_CtTraffic_("SPEEDING","LICENSE")
 
 funs_download <- list(
   data_download_FRED_,

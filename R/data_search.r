@@ -86,9 +86,11 @@ data_search_MarsCrater_ <- function(.search_str){
 # data_search_MarsCrater_("texture")
 
 data_search_CtTraffic_ <- function(.search_str){
-
+  qacdata::cttrafficstops_codebook %>%
+    filter(str_detect(description, .search_str))
 }
 
+# data_search_CtTraffic_("speeding")
 
 funs_search <- list(
   data_search_FRED_,

@@ -31,5 +31,16 @@ test_that("data_download handles valid input", {
     digest::digest(data_download("FRED", "LNU04027659")),
     "f5e8ea280a06fd818d63395baabec631"
   )
-
+  expect_equal(
+    digest::digest(data_download("WDI", "2.0.cov.Sch", "2.0.hoi.Math.pl_2.all", "UIS.GTVP.23.GPV.M")),
+    "PUT CORRECT HASH HERE"
+  )
+  expect_equal(
+    digest::digest(data_download("MarsCrater", "LATITUDE_CIRCLE_IMAGE","NUMBER_LAYERS")),
+    "b1111b4483e0423a99e7e3bf7a4a70b8"
+  )
+  expect_equal(
+    digest::digest(data_download("CtTraffic", "Intervention_Location","Intervention_Reason")),
+    "5f802fc1fa8dc3d7583e1b4e7ec7be4b"
+  )
 })

@@ -29,7 +29,15 @@ test_that("data_search handles valid input", {
     "17a9e226662f32af78cfd97a8d03ac47"
   )
   expect_equal(
-    digest::digest(data_search("date")),
-    "4ae70d157a90b07a84cd00568e155d94"
+    digest::digest(data_search("wages","WDI")),
+    "d3d6d7bba4c31f39b2c55a33af8b2a00"
+  )
+  expect_equal(
+    digest::digest(data_search("longitude","MarsCrater")),
+    "917c6f4bf6a497be9d81ae94a64e92d5"
+  )
+  expect_equal(
+    digest::digest(data_search("speed","CtTraffic")),
+    "681bb1d4e0197d0a2b3715e3a775e8ce"
   )
 })

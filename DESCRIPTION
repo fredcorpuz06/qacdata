@@ -12,7 +12,7 @@ Depends:
   R (>= 3.6.0)
 Imports:
     dplyr,
-    janitor,?
+    janitor,
     jsonlite,
     lubridate,
     purrr,

@@ -1,0 +1,92 @@
+---
+title: "Untitled"
+author: "Frederick"
+date: "11/18/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(ggplot2)
+theme_set(theme_light())
+
+source("wdi_api.r")
+source("utils.r")
+```
+
+# Download quant data
+```{r}
+# "http://api.worldbank.org/countries/all/indicators/4.1_TOTAL.EDU.SPENDING?format=json&per_page=2500&date=1950:2019"
+indicators <- data_search("poverty")
+View(indicators)
+
+INDICATOR <- "1.0.PSev.1.90usd"
+
+wdi_rez <- data_download(INDICATOR) %>% 
+  filter_mostly_missing(country, value, perc = 0.2)
+
+wdi_rez 
+wdi_rez %>% 
+  ggplot(aes(date, value)) + 
+  geom_line() + 
+  facet_wrap(~ country) +
+  labs(title = get_title(indicators, INDICATOR))
+
+
+##----------
+## World Map
+##----------
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(rgeos)
+world <- ne_countries(scale = 110, returnclass = "sf")
+map_data <- wdi_rez %>% 
+  left_join(countries %>% select(name, longitude, latitude), by = c("country" = "name")) %>% 
+  mutate_at(vars(contains("ude")), as.double)
+
+bounds <- map_data %>%
+  group_by(country)  %>% 
+  summarise(longitude = first(longitude),
+            latitude = first(latitude)) %>% 
+  ungroup() %>% 
+  summarise(max_long = max(longitude, na.rm = TRUE),
+            max_lat = max(latitude, na.rm = TRUE),
+            min_long = min(longitude, na.rm = TRUE),
+            min_lat = min(latitude, na.rm = TRUE))
+
+ggplot(world) +
+  geom_sf() + 
+  geom_point(data = map_data, aes(x = longitude, y = latitude), size = 2, color = "red") + 
+  coord_sf(xlim = c(bounds$min_long, bounds$max_long),
+           ylim = c(bounds$min_lat, bounds$max_lat)) + 
+  labs(title = paste(get_title(indicators, INDICATOR), sep = ": "), 
+       x = "", 
+       y = "")
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+Frequency: For fetching quarterly (Q), monthly (M) or yearly (Y) values. This feature currently works along with MRV. This query string is useful for querying high frequency data.
+
+Example: http://api.worldbank.org/v2/en/country/ind;chn/indicator/DPANUSSPF?mrv=7&frequency=M
+
+Multiple Indicators: Data for multiple indicators can be queried from a single data source by providing the indicator codes separated by ";" (semicolon), as well as the source ID.
+
+Example: http://api.worldbank.org/v2/country/chn;ago/indicator/AG.AGR.TRAC.NO;SP.POP.TOTL?source=2
+Note: A maximum of 60 indicators can be used. A maximum of 1,500 characters are allowed between two back-slashes (/). A maximum of 4,000 characters are allowed in the entire URL.

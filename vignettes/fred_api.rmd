@@ -1,0 +1,31 @@
+---
+title: "search"
+author: "Frederick"
+date: "11/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source("fred_api.r")
+theme_set(theme_light())
+```
+
+
+
+```{r}
+# "https://api.stlouisfed.org/fred/series/search?search_text=monetary+service+index&api_key=abcdefghijklmnopqrstuvwxyz123456&file_type=json"
+
+vars <- data_search("bank")
+View(vars)
+var <- "H8B1023NCBCMG"
+data_download(var)  %>% 
+  ggplot(aes(date, value)) +
+  geom_line() + 
+  labs(title = get_title(vars, var))
+  
+```
+

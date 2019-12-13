@@ -16,7 +16,7 @@ searching all supported datasets.}
 }
 \value{
 A dataframe w/ columns - \code{dataset}, \code{col_id},
-  \code{description}, \code{notes}
+\code{description}, \code{notes}
 }
 \description{
 Find columns in supported datasets that relate to keyword

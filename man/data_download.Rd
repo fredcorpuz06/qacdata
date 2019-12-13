@@ -15,7 +15,7 @@ datasets: \code{FRED}, \code{WDI}, \code{AddHealth}, \code{MarsCrater},
 }
 \value{
 A dataframe w/ the input \emph{col_id}'s as columns with the
-  appropriate metadata
+appropriate metadata
 }
 \description{
 Download columns from supported datasets

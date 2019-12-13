@@ -33,7 +33,7 @@ test_that("data_download handles valid input", {
   )
   expect_equal(
     digest::digest(data_download("WDI", "2.0.cov.Sch", "2.0.hoi.Math.pl_2.all", "UIS.GTVP.23.GPV.M")),
-    "PUT CORRECT HASH HERE"
+    "213fc568a75dab4b0bfddcbbc9aa79e4"
   )
   expect_equal(
     digest::digest(data_download("MarsCrater", "LATITUDE_CIRCLE_IMAGE","NUMBER_LAYERS")),

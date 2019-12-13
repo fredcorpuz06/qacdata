@@ -3,7 +3,7 @@ Title: Concise Searching And Downloading Of Relevant Data
 Version: 0.1
 Authors@R: c(
     person("Frederick", "Corpuz", role = c("aut", "cre"), email = "fcorpuz@wesleyan.edu"),
-    person("Kevin", "Koech", role = c("aut", "cre"), email = "kkoech@wesleyan.edu")           
+    person("Kevin", "Koech", role = "aut", email = "kkoech@wesleyan.edu")           
   )
 Description: A data package for searching and downloading from FRED, WDI, 
   Addhealth, MarsCrater, CtTraffic

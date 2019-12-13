@@ -82,8 +82,8 @@ data_download_WDI_ <- function(...){
     params <- paste0(PARAMS_DEFAULTS, collapse = "")
     req <- paste0(url, params, collapse = "")
 
-
-    try(json_flat <- fromJSON(req, flatten = TRUE)[[2]])
+    ## TODO: implement a trycatch here
+    json_flat <- fromJSON(req, flatten = TRUE)[[2]]
 
     json_flat %>%
       clean_names() %>%

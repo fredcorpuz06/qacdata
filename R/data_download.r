@@ -85,7 +85,7 @@ data_download_WDI_ <- function(...){
     ## TODO: implement a trycatch here
     json_flat <- fromJSON(req, flatten = TRUE)[[2]]
 
-    json_flat %>%
+    rez <- json_flat %>%
       clean_names() %>%
       as_tibble() %>%
       select(year = date, country = country_value, value) %>%

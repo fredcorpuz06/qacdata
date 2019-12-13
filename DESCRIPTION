@@ -12,7 +12,7 @@ Depends:
   R (>= 3.6.0)
 Imports:
     dplyr,
-    janitor,
+    janitor,?
     jsonlite,
     lubridate,
     purrr,
@@ -25,6 +25,7 @@ Suggests:
     rmarkdown
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 BugReports: https://github.com/fredcorpuz06/qacdata/issues

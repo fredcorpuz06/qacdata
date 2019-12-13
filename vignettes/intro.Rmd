@@ -1,0 +1,87 @@
+---
+title: "Introduction to qacdata"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Data Search: Finding interesting variables
+```{r setup, warning = FALSE, message = FALSE}
+library(qacdata)
+library(dplyr)
+```
+
+
+Let's begin by examining the `AddHealth` dataset
+```{r}
+qacdata::addhealth
+```
+
+There are `r dim(qacdata::addhealth)[2]` columns/variables in this dataset. Normally, we would find variables of interesting by finding the codebook online or accessing a PDF version and hitting *Ctrl + F*. With the `qacdata` packing this search can be done in R
+
+```{r}
+data_search("birth", "AddHealth")
+
+```
+We find 45 possible variables within the `AddHealth` dataset that's description contains the word "birth". `H4TR10` by its description is on "How many live births resulted from (this pregnancy/these pregnancies)?". 
+
+If there are more variables that can we viewed on your console, evoke the `View` function. 
+```{r eval=FALSE}
+View(data_search("sex", "AddHealth"))
+```
+"H4SE27" seems interesting. Let's find more about it
+
+```{r}
+data_search("sex", "AddHealth") %>% 
+  get_description("H4SE27")
+```
+Lets grab both columns and work with them.
+
+
+## Data Download: get data and visualize
+
+First let's download the data
+```{r}
+data_download("AddHealth", "H4TR10") 
+```
+
+
+Let's recode missing values based on the information we got from the `get_note` function
+```{r}
+data_search("birth", "AddHealth") %>% 
+  get_note("H4TR10")
+  
+data_search("sex", "AddHealth") %>% 
+  get_note("H4SE27")
+
+cleaned_df <- data_download("AddHealth", "H4TR10", "H4SE27") %>% 
+  transmute(births = ifelse(H4TR10 >= 96, NA, H4TR10),
+         sex = ifelse(H4SE27 >= 8, NA, H4SE27)) 
+cleaned_df
+```
+
+
+Now we are ready to visualize
+```{r}
+library(ggplot2)
+theme_set(theme_light())
+cleaned_df %>% 
+  na.omit() %>% 
+  count(births, sex) %>% 
+  ggplot(aes(x = births, y = n, fill = factor(sex))) +
+  geom_col() +
+  labs(title = "Nonsense graph for illustration purposes",
+       x = "Category of live birthds",
+       y = "Count",
+       fill = "Sex Freq")
+```
+

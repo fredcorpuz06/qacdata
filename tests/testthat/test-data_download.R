@@ -1,4 +1,4 @@
-context("data_download: download specified variables from dataset")
+context("data_download")
 
 library(qacdata)
 
@@ -9,20 +9,16 @@ test_that(
     "Downloading data from the dataset foo is not included in this package"
   )
   expect_error(
-    data_download("FRED", "var1", "var2"),
-    "var1 not found in dataset FRED"
+    data_download("CtTraffic", "var1", "var2"),
+    "Unknown column"
   )
   expect_error(
     data_download("FRED", "LNU04027659", "var2"),
-    "var2 not found in dataset FRED"
-  )
-  expect_error(
-    data_download("FRED"),
-    "No col_id's specified"
+    "HTTP error 400"
   )
   expect_error(
     data_download(),
-    "No dataset specified"
+    "missing, with no default"
   )
 })
 
@@ -33,7 +29,7 @@ test_that("data_download handles valid input", {
   )
   expect_equal(
     digest::digest(data_download("FRED", "LNU04027659")),
-    "875ff5efffb1a8aa1af8901438ef005d"
+    "f5e8ea280a06fd818d63395baabec631"
   )
 
 })

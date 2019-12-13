@@ -1,4 +1,4 @@
-context("data_search: use text string to search for relevant variables")
+context("data_search")
 
 library(qacdata)
 
@@ -26,10 +26,10 @@ test_that("data_search handles valid input", {
   )
   expect_equal(
     digest::digest(data_search("birth", c("AddHealth", "WDI"))),
-    ""
+    "17a9e226662f32af78cfd97a8d03ac47"
   )
   expect_equal(
-    digest::digest(data_search("birth")),
-    ""
+    digest::digest(data_search("date")),
+    "4ae70d157a90b07a84cd00568e155d94"
   )
 })

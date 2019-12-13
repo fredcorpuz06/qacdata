@@ -1,22 +1,22 @@
-
-DATASETS <- c("FRED", "WDI", "AddHealth", "MarsCrater", "CtTraffic")
-FRED_KEYS <- c(
-  "6e1cfa1262aee2287675ddd319354efb",
-  "f8a0e2680c094aba542e0fd6fed8ed98")
-
-
-
-# dataset, col_id, description, notes
-
+#' @title Data search by keyword
+#' @description Find columns in supported datasets that relate to keyword
+#' @param search_str a string, case insensitive
+#' @param datasets a vector of the selected datasets to search. Values must be
+#'   in of the following supported datasets: \code{FRED}, \code{WDI},
+#'   \code{AddHealth}, \code{MarsCrater}, \code{CtTraffic}. Defaults to
+#'   searching all supported datasets.
 #' @importFrom purrr map_df
+#' @return A dataframe w/ columns - \code{dataset}, \code{col_id},
+#'   \code{description}, \code{notes}
+#' @examples
+#' data_search("birth")
+#' data_search("birth", "AddHealth")
+#' data_search("birth", c("AddHealth", "MarsCrater"))
+#' @rdname data_search
 #' @export
-data_search <- function(.search_str, .datasets = DATASETS, .view_meta = FALSE){
-  map_df(.datasets, ~ single_data_search_(.search_str, .dataset = .x))
+data_search <- function(search_str, datasets = DATASETS){
+  map_df(datasets, ~ single_data_search_(search_str, .dataset = .x))
 }
-
-# data_search("education", c("FRED", "WDI"))
-# data_search("birth", "AddHealth")
-
 
 #' @import dplyr
 #' @importFrom jsonlite fromJSON
@@ -54,43 +54,34 @@ data_search_FRED_ <- function(.search_str){
     nest(notes, .key = "notes")
 }
 
-# data_search_FRED_("education")
-
 #' @import stringr
 data_search_WDI_ <- function(.search_str){
   qacdata::wdi_indicators %>%
-    filter(str_detect(search_text, .search_str)) %>%
+    filter(str_detect(search_text, fixed(.search_str, ignore_case = TRUE))) %>%
     mutate(description = str_trim(description)) %>%
     select(-search_text)
 }
-
-# data_search_WDI_("poverty")
 
 #' @import stringr
 data_search_AddHealth_ <- function(.search_str){
   qacdata::addhealth_codebook %>%
     filter(survey == "W4") %>%
-    filter(str_detect(description, .search_str)) %>%
+    filter(str_detect(description, fixed(.search_str, ignore_case = TRUE))) %>%
     select(-survey)
 }
-
-# data_search_AddHealth_("birth")
 
 #' @import stringr
 data_search_MarsCrater_ <- function(.search_str){
   qacdata::marscrater_codebook %>%
-    filter(str_detect(description, .search_str))
-
+    filter(str_detect(description, fixed(.search_str, ignore_case = TRUE)))
 }
 
-# data_search_MarsCrater_("texture")
-
+#' @import stringr
 data_search_CtTraffic_ <- function(.search_str){
-  qacdata::cttrafficstops_codebook %>%
-    filter(str_detect(description, .search_str))
+  qacdata::cttraffic_codebook %>%
+    filter(str_detect(description, fixed(.search_str, ignore_case = TRUE)))
 }
 
-# data_search_CtTraffic_("speeding")
 
 funs_search <- list(
   data_search_FRED_,
@@ -98,24 +89,32 @@ funs_search <- list(
   data_search_AddHealth_,
   data_search_MarsCrater_,
   data_search_CtTraffic_)
+
+DATASETS <- c("FRED", "WDI", "AddHealth", "MarsCrater", "CtTraffic")
 funs_search <- setNames(funs_search, DATASETS)
-
-
 
 #' @import dplyr
 single_data_search_ <- function(.search_str, .dataset){
   if(!(.dataset %in% DATASETS)){
     stop(paste(
       "Searching within the dataset", .dataset ,
-      "is not included in this package"))
+      "is not included in this package"
+    ))
   }
 
   fun <- funs_search[[.dataset]]
   df <- fun(.search_str)
-  df %>%
+  rez <- df %>%
     mutate(dataset = .dataset) %>%
     select(dataset, col_id, description, notes)
 
-}
+  if(nrow(df) == 0){
+    message(paste(
+      .search_str, "doesn't match any values in the selected datasets"
+    ))
+    return(tibble())
+  } else {
+    rez
+  }
 
-# single_data_search_("education", "FRED")
+}
